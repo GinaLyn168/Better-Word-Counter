@@ -39,7 +39,7 @@ Commits, pushes, and pulls will be used in order for both memebers to stay up to
 
 ### Defined Group Norms
 
-- Communication Protocol (The 24-Hour Rule): All project-related messages must be acknowledged within 24 hours. A brief "received" or "will check later" is required to maintain momentum.
+- All project-related messages must be acknowledged within 24 hours. A brief "received" or "will check later" is required to maintain momentum.
 
 - All official project coordination and quick-syncs will occur via iMessage.
 
