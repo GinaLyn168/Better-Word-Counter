@@ -1,0 +1,10 @@
+before you code anything new, do:
+
+clasp pull
+
+NOTE: IT WILL DELETE ANY UNPUSHED CODE WHEN YOU PULL!
+
+~~~
+MAKE SURE YOU ARE IN PRODUCT DIRECTORY, then run these commands:
+
+clasp push
