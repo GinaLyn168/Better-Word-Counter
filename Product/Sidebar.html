@@ -4,7 +4,21 @@
     <base target="_top">
   </head>
   <body>
-    <h1>Better Word Counter</h1>
-    <p>Coming soon.</p>
+    <h2>Better Word Counter</h2>
+    <p>Word count: <span id="wordCount">0</span></p>
+    <button onclick="updateCount()">Refresh Count</button>
+
+    <script>
+      function updateCount() {
+        google.script.run
+          .withSuccessHandler(count => {
+            document.getElementById('wordCount').innerText = count;
+          })
+          .getWordCount();
+      }
+
+      updateCount();
+      setInterval(updateCount, 1000);
+    </script>
   </body>
 </html>
