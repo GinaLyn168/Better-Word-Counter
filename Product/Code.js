@@ -41,3 +41,12 @@ function getSelectedText() {
   return selectedText.trim();
 }
 
+function saveExclusion(text) {
+  const docProperties = PropertiesService.getDocumentProperties();
+  const exclusions = JSON.parse(docProperties.getProperty('exclusions') || '[]');
+  if (!exclusions.includes(text)) {
+    exclusions.push(text);
+    docProperties.setProperty('exclusions', JSON.stringify(exclusions));
+  }
+  return exclusions;
+}
