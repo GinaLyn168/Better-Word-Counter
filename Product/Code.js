@@ -14,7 +14,30 @@ function showSidebar() {
 function getWordCount() {
   const doc = DocumentApp.getActiveDocument();
   const text = doc.getBody().getText();
-  const words = text.trim().split(/\s+/).filter(word => word.length > 0);
+  const words = text.trim()
+    .split(/\s+/)
+    .filter(word => word.length > 0 && !/^[-–—]+$/.test(word));
   return words.length;
+}
+
+function getSelectedText() {
+  const selection = DocumentApp.getActiveDocument().getSelection();
+  if (!selection) return null;
+  
+  const elements = selection.getRangeElements();
+  let selectedText = '';
+  
+  for (const element of elements) {
+    if (element.getElement().editAsText) {
+      const text = element.getElement().asText().getText();
+      if (element.isPartial()) {
+        selectedText += text.substring(element.getStartOffset(), element.getEndOffsetInclusive() + 1);
+      } else {
+        selectedText += text;
+      }
+    }
+  }
+  
+  return selectedText.trim();
 }
 

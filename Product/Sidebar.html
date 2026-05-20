@@ -2,6 +2,7 @@
 <html>
   <head>
     <base target="_top">
+    <link rel="stylesheet" href="sidebarCSS.css">
   </head>
   <body>
     <h2>Better Word Counter</h2>
@@ -19,6 +20,19 @@
 
       updateCount();
       setInterval(updateCount, 1000);
+
+
+    </script>
+    <p>Selected text: <span id="selectedText">None</span></p>
+    <button onclick="updateSelectedText()">Refresh Selected Text</button>
+    <script>
+      function updateSelectedText() {
+        google.script.run
+          .withSuccessHandler(text => {
+            document.getElementById('selectedText').innerText = text || 'None';
+          })
+          .getSelectedText();
+      }
     </script>
   </body>
 </html>
