@@ -17,6 +17,12 @@
       }
       button {
         font-family: "Limelight", Arial, Helvetica, sans-serif;
+        /* New start */
+        background: #0B57D0; 
+        border-radius: 50px;
+        border: none;
+        color: white;
+        /* New end */
         font-weight: 50;
         font-style: normal;
         padding: 10px 20px;
@@ -41,8 +47,7 @@
       updateCount();
       setInterval(updateCount, 1000);
     </script>
-    
-    <p>Selected text: <span id="selectedText">None</span></p>
+    <!-- modified --> <h2>Selected text: <span id="selectedText">None</span></h2>
     <button onclick="updateSelectedText()">Refresh Selected Text</button>
     <script>
       function updateSelectedText() {
@@ -51,6 +56,42 @@
             document.getElementById('selectedText').innerText = text || 'None';
           })
           .getSelectedText();
+      }
+
+        updateSelectedText();
+        setInterval(updateSelectedText, 1000);
+    </script>
+    <<button onclick="saveExclusion()" style="margin-top: 12px; display: block;">Exclude Selected Text</button>
+
+    <script>
+      function saveExclusion() {
+        google.script.run
+          .withSuccessHandler(exclusions => {
+            displayExclusions(exclusions);
+          })
+          .saveExclusion(document.getElementById('selectedText').innerText);
+      }
+
+      function displayExclusions(exclusions) {
+        const list = document.getElementById('exclusionList');
+        list.innerHTML = '';
+        for (const phrase of exclusions) {
+          list.innerHTML += `<p>${phrase}</p>`;
+        }
+      }
+    </script>
+    <div id="exclusionList"></div>
+
+    <button onclick="debug()">Debug</button>
+    <p id="debugOutput"></p>
+
+    <script>
+      function debug() {
+        google.script.run
+          .withSuccessHandler(result => {
+            document.getElementById('debugOutput').innerText = result;
+          })
+          .debugWordCount();
       }
     </script>
   </body>

@@ -13,10 +13,23 @@ function showSidebar() {
 
 function getWordCount() {
   const doc = DocumentApp.getActiveDocument();
-  const text = doc.getBody().getText();
+  let text = doc.getBody().getText().replace(/\n/g, ' ');
+  
+  const props = PropertiesService.getDocumentProperties();
+  const exclusions = JSON.parse(props.getProperty('exclusions') || '[]');
+  
+  for (const phrase of exclusions) {
+    const trimmedPhrase = phrase.trim();
+    if (trimmedPhrase.length === 0) continue;
+    const escapedPhrase = trimmedPhrase.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp('\\s*' + escapedPhrase + '\\s*', 'gi');
+    text = text.replace(regex, ' ');
+  }
+  
   const words = text.trim()
     .split(/\s+/)
     .filter(word => word.length > 0 && !/^[-–—]+$/.test(word));
+    
   return words.length;
 }
 
@@ -38,7 +51,7 @@ function getSelectedText() {
     }
   }
   
-  return selectedText.trim();
+  return selectedText.trim(); 
 }
 
 function saveExclusion(text) {
@@ -49,4 +62,22 @@ function saveExclusion(text) {
     docProperties.setProperty('exclusions', JSON.stringify(exclusions));
   }
   return exclusions;
+}
+
+function clearExclusions() {
+  const props = PropertiesService.getDocumentProperties();
+  props.setProperty('exclusions', '[]');
+  return [];
+}
+
+function debugWordCount() {
+  const doc = DocumentApp.getActiveDocument();
+  let text = doc.getBody().getText();
+  const exclusions = getExclusions();
+  return JSON.stringify({ text: text, exclusions: exclusions });
+}
+
+function getExclusions() {
+  const props = PropertiesService.getDocumentProperties();
+  return JSON.parse(props.getProperty('exclusions') || '[]');
 }
