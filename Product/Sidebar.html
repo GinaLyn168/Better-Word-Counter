@@ -10,24 +10,62 @@
         font-family: "Limelight", Arial, Helvetica, sans-serif;
         font-weight: 100;
         font-style: normal;
+        overflow: hidden;
       }
+
       h2 {
         color: #444746;
         font-size: 20px;
+        margin: 0 0 12px;
       }
+
       button {
+        display: inline-block;
+        vertical-align: middle;
         font-family: "Limelight", Arial, Helvetica, sans-serif;
-        /* New start */
         background: #0B57D0; 
         border-radius: 50px;
         border: none;
         color: white;
-        /* New end */
         font-weight: 50;
         font-style: normal;
         padding: 10px 20px;
+        margin: 0 12px 12px 0;
         font-size: 14px;
         cursor: pointer;
+      }
+      
+      #exclusionList {
+        width: 100%;
+        box-sizing: border-box;
+        max-height: 300px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding: 10px;
+        margin: 10px 0;
+        scrollbar-color: #bbb transparent;
+        scrollbar-width: thin;
+      }
+
+      #exclusionList::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      #exclusionList::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      #exclusionList::-webkit-scrollbar-thumb {
+        background: #bbb;
+        border-radius: 4px;
+      }
+
+      #exclusionList::-webkit-scrollbar-button {
+        display: none;
+      }
+
+      #exclusionList p {
+        margin: 5px 0;
       }
     </style>
   </head>
@@ -47,8 +85,8 @@
       updateCount();
       setInterval(updateCount, 1000);
     </script>
-    <!-- modified --> <h2>Selected text: <span id="selectedText">None</span></h2>
-    <button onclick="updateSelectedText()">Refresh Selected Text</button>
+    <h2>Selected text: <span id="selectedText">None</span></h2>
+    <button onclick="updateSelectedText()">Refresh</button>
     <script>
       function updateSelectedText() {
         google.script.run
@@ -61,7 +99,7 @@
         updateSelectedText();
         setInterval(updateSelectedText, 1000);
     </script>
-    <<button onclick="saveExclusion()" style="margin-top: 12px; display: block;">Exclude Selected Text</button>
+    <button onclick="saveExclusion()">Exclude</button>
 
     <script>
       function saveExclusion() {
@@ -79,7 +117,21 @@
           list.innerHTML += `<p>${phrase}</p>`;
         }
       }
+
+      function loadExclusions() {
+        google.script.run
+          .withSuccessHandler(exclusions => {
+            if (exclusions && exclusions.length > 0) {
+              displayExclusions(exclusions);
+            }
+          })
+          .getExclusions();
+      }
+
+      loadExclusions();
     </script>
+    <hr>
+    <h2>Excluded Phrases</h2>
     <div id="exclusionList"></div>
 
     <button onclick="debug()">Debug</button>
