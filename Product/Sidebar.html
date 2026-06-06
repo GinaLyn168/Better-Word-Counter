@@ -121,8 +121,19 @@
         const list = document.getElementById('exclusionList');
         list.innerHTML = '';
         for (const phrase of exclusions) {
-          list.innerHTML += `<p>${phrase}</p>`;
+          list.innerHTML += `
+            <p>${phrase} 
+              <button onclick="removeExclusion('${phrase}')" style="margin-left: 8px;">Remove</button>
+            </p>`;
         }
+      }
+
+      function removeExclusion(phrase) {
+        google.script.run
+          .withSuccessHandler(exclusions => {
+            displayExclusions(exclusions);
+          })
+          .removeExclusion(phrase);
       }
 
       function loadExclusions() {

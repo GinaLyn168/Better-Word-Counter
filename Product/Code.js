@@ -76,6 +76,14 @@ function clearExclusions() {
   return [];
 }
 
+function removeExclusion(phrase) {
+  const props = PropertiesService.getDocumentProperties();
+  const existing = JSON.parse(props.getProperty('exclusions') || '[]');
+  const updated = existing.filter(p => p !== phrase);
+  props.setProperty('exclusions', JSON.stringify(updated));
+  return updated;
+}
+
 function debugWordCount() {
   const doc = DocumentApp.getActiveDocument();
   let text = doc.getBody().getText();
