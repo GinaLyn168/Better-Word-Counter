@@ -120,12 +120,19 @@
       function displayExclusions(exclusions) {
         const list = document.getElementById('exclusionList');
         list.innerHTML = '';
-        for (const phrase of exclusions) {
-          list.innerHTML += `
-            <p>${phrase} 
-              <button onclick="removeExclusion('${phrase}')" style="margin-left: 8px;">Remove</button>
-            </p>`;
-        }
+        exclusions.forEach(phrase => {
+          const p = document.createElement('p');
+          p.textContent = phrase + ' ';
+          const btn = document.createElement('button');
+          btn.textContent = 'Remove';
+          btn.style.marginLeft = '8px';
+          btn.dataset.phrase = phrase;
+          btn.addEventListener('click', function() {
+            removeExclusion(this.dataset.phrase);
+          });
+          p.appendChild(btn);
+          list.appendChild(p);
+        });
       }
 
       function removeExclusion(phrase) {
