@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <!-- The UI design was done by Grace -->
     <base target="_top">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -99,6 +100,7 @@
           .getSelectedText();
       }
 
+      // Function made by Ranbir, minimal AI use to understand how to save the exclusion and syntax
       function saveExclusion() {
         const phrase = document.getElementById('selectedText').innerText;
         if (phrase === 'None' || phrase.trim() === '') return;
@@ -109,6 +111,7 @@
           .saveExclusion(phrase);
       }
 
+      // Function made by Ranbir, minimal AI use to understand how to save the exclusion and syntax
       function clearExclusions() {
         google.script.run
           .withSuccessHandler(exclusions => {
@@ -117,6 +120,7 @@
           .clearExclusions();
       }
 
+      // Function made by both AI and Ranbir prominently
       function displayExclusions(exclusions) {
         const list = document.getElementById('exclusionList');
         list.innerHTML = '';
@@ -135,6 +139,7 @@
         });
       }
 
+      // Function made by Ranbir, following model of other functions
       function removeExclusion(phrase) {
         google.script.run
           .withSuccessHandler(exclusions => {
@@ -143,6 +148,7 @@
           .removeExclusion(phrase);
       }
 
+      // Function made by Ranbir, following model of other functions
       function loadExclusions() {
         google.script.run
           .withSuccessHandler(exclusions => {
