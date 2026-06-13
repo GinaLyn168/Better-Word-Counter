@@ -1,12 +1,87 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <!-- The UI design was done by Grace -->
     <base target="_top">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Limelight&display=swap" rel="stylesheet">
+    <style>
+      body {
+        font-family: "Limelight", Arial, Helvetica, sans-serif;
+        font-weight: 100;
+        font-style: normal;
+        overflow: hidden;
+      }
+
+      h2 {
+        color: #444746;
+        font-size: 20px;
+        margin: 0 0 12px;
+      }
+
+      button {
+        display: inline-block;
+        vertical-align: middle;
+        font-family: "Limelight", Arial, Helvetica, sans-serif;
+        background: #0B57D0;
+        border-radius: 50px;
+        border: none;
+        color: white;
+        font-weight: 400;
+        font-style: normal;
+        padding: 10px 20px;
+        margin: 0 12px 12px 0;
+        font-size: 14px;
+        cursor: pointer;
+      }
+
+      #exclusionList {
+        width: 100%;
+        box-sizing: border-box;
+        max-height: 300px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding: 10px;
+        margin: 10px 0;
+        scrollbar-color: #bbb transparent;
+        scrollbar-width: thin;
+      }
+
+      #exclusionList::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      #exclusionList::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      #exclusionList::-webkit-scrollbar-thumb {
+        background: #bbb;
+        border-radius: 4px;
+      }
+
+      #exclusionList::-webkit-scrollbar-button {
+        display: none;
+      }
+
+      #exclusionList p {
+        margin: 5px 0;
+      }
+    </style>
   </head>
   <body>
-    <h2>Better Word Counter</h2>
-    <p>Word count: <span id="wordCount">0</span></p>
+    <h2>Word count: <span id="wordCount">0</span></h2>
     <button onclick="updateCount()">Refresh Count</button>
+
+    <h2>Selected text: <span id="selectedText">None</span></h2>
+    <button onclick="updateSelectedText()">Refresh</button>
+    <button onclick="saveExclusion()">Exclude</button>
+    <button onclick="clearExclusions()">Clear All</button>
+
+    <hr>
+    <h2>Excluded Phrases</h2>
+    <div id="exclusionList"></div>
 
     <script>
       function updateCount() {
@@ -17,8 +92,79 @@
           .getWordCount();
       }
 
+      function updateSelectedText() {
+        google.script.run
+          .withSuccessHandler(text => {
+            document.getElementById('selectedText').innerText = text || 'None';
+          })
+          .getSelectedText();
+      }
+
+      // Function made by Ranbir, minimal AI use to understand how to save the exclusion and syntax
+      function saveExclusion() {
+        const phrase = document.getElementById('selectedText').innerText;
+        if (phrase === 'None' || phrase.trim() === '') return;
+        google.script.run
+          .withSuccessHandler(exclusions => {
+            displayExclusions(exclusions);
+          })
+          .saveExclusion(phrase);
+      }
+
+      // Function made by Ranbir, minimal AI use to understand how to save the exclusion and syntax
+      function clearExclusions() {
+        google.script.run
+          .withSuccessHandler(exclusions => {
+            displayExclusions(exclusions);
+          })
+          .clearExclusions();
+      }
+
+      // Function made by both AI and Ranbir prominently
+      function displayExclusions(exclusions) {
+        const list = document.getElementById('exclusionList');
+        list.innerHTML = '';
+        exclusions.forEach(phrase => {
+          const p = document.createElement('p');
+          p.textContent = phrase + ' ';
+          const btn = document.createElement('button');
+          btn.textContent = 'Remove';
+          btn.style.marginLeft = '8px';
+          btn.dataset.phrase = phrase;
+          btn.addEventListener('click', function() {
+            removeExclusion(this.dataset.phrase);
+          });
+          p.appendChild(btn);
+          list.appendChild(p);
+        });
+      }
+
+      // Function made by Ranbir, following model of other functions
+      function removeExclusion(phrase) {
+        google.script.run
+          .withSuccessHandler(exclusions => {
+            displayExclusions(exclusions);
+          })
+          .removeExclusion(phrase);
+      }
+
+      // Function made by Ranbir, following model of other functions
+      function loadExclusions() {
+        google.script.run
+          .withSuccessHandler(exclusions => {
+            if (exclusions && exclusions.length > 0) {
+              displayExclusions(exclusions);
+            }
+          })
+          .getExclusions();
+      }
+
       updateCount();
       setInterval(updateCount, 1000);
+      updateSelectedText();
+      setInterval(updateSelectedText, 1000);
+      loadExclusions();
+
     </script>
   </body>
 </html>
