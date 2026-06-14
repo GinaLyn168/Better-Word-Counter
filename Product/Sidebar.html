@@ -83,7 +83,7 @@
         scrollbar-color: #bbb transparent;
         scrollbar-width: thin;
         font-size: 16px;
-        line-height: 1.15;
+        line-height: 1.2;
         color: #666;
         word-break: break-word;
         overflow-wrap: anywhere;
@@ -110,6 +110,7 @@
       #exclusionList {
         width: 100%;
         box-sizing: border-box;
+        min-height: 42vh;
         max-height: 42vh;
         overflow-y: auto;
         overflow-x: hidden;
@@ -136,8 +137,26 @@
         display: none;
       }
 
-      #exclusionList p {
+      .exclusion-item {
         margin: 5px 0;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        line-height: 1.2;
+      }
+
+      .exclusion-item .phrase {
+        flex: 1;
+        margin-right: 8px;
+      }
+
+      .exclusion-item.missing .phrase {
+        text-decoration: line-through;
+        color: #999;
+      }
+
+      #exclusionList p {
+        margin: 0;
       }
     </style>
   </head>
@@ -196,9 +215,17 @@
       function displayExclusions(exclusions) {
         const list = document.getElementById('exclusionList');
         list.innerHTML = '';
-        exclusions.forEach(phrase => {
+        exclusions.forEach(item => {
+          const phrase = item.phrase || item;
+          const missing = item.missing === true;
           const p = document.createElement('p');
-          p.textContent = phrase + ' ';
+          p.className = 'exclusion-item' + (missing ? ' missing' : '');
+
+          const phraseSpan = document.createElement('span');
+          phraseSpan.className = 'phrase';
+          phraseSpan.textContent = phrase;
+          p.appendChild(phraseSpan);
+
           const btn = document.createElement('button');
           btn.textContent = '×';
           btn.className = 'remove-button';
@@ -236,6 +263,7 @@
       updateSelectedText();
       setInterval(updateSelectedText, 1000);
       loadExclusions();
+      setInterval(loadExclusions, 1000);
 
     </script>
   </body>

@@ -102,5 +102,17 @@ function removeExclusion(phrase) {
 // Function made by Ranbir 
 function getExclusions() {
   const props = PropertiesService.getDocumentProperties();
-  return JSON.parse(props.getProperty('exclusions') || '[]');
+  const exclusions = JSON.parse(props.getProperty('exclusions') || '[]');
+  const text = normalizeText(DocumentApp.getActiveDocument().getBody().getText());
+
+  return exclusions.map(phrase => {
+    const normalizedPhrase = normalizeText(phrase);
+    const escapedPhrase = normalizedPhrase.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp(escapedPhrase, 'gi');
+    const found = Boolean(text.match(regex));
+    return {
+      phrase: normalizedPhrase,
+      missing: !found,
+    };
+  });
 }
