@@ -16,6 +16,12 @@ function normalizeText(text) {
   return text ? text.replace(/\s+/g, ' ').trim() : '';
 }
 
+function countWords(text) {
+  return normalizeText(text).split(/\s+/)
+    .filter(word => word.length > 0 && !/^[-–—]+$/.test(word))
+    .length;
+}
+
 function getWordCount() {
   // The following parts were coded by Ranbir
   const doc = DocumentApp.getActiveDocument();
@@ -24,9 +30,7 @@ function getWordCount() {
   const props = PropertiesService.getDocumentProperties();
   const exclusions = JSON.parse(props.getProperty('exclusions') || '[]');
   
-  const totalWords = text.split(/\s+/)
-    .filter(word => word.length > 0 && !/^[-–—]+$/.test(word))
-    .length;
+  const totalWords = countWords(text);
   
   let excludedCount = 0;
   // This algorithm for finding the exclusions in the text was aided by AI a lot
@@ -37,7 +41,7 @@ function getWordCount() {
     const regex = new RegExp(escapedPhrase, 'gi');
     const matches = text.match(regex);
     if (matches) {
-      const phraseWordCount = normalizedPhrase.split(/\s+/).filter(w => w.length > 0).length;
+      const phraseWordCount = countWords(normalizedPhrase);
       excludedCount += matches.length * phraseWordCount;
     }
   }
