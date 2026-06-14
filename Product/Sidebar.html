@@ -7,10 +7,24 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Limelight&display=swap" rel="stylesheet">
     <style>
+      *, *::before, *::after {
+        box-sizing: border-box;
+      }
+
+      html, body {
+        margin: 0;
+        padding: 0;
+        min-width: 0;
+        height: 100%;
+        overflow: hidden;
+      }
+
       body {
         font-family: "Limelight", Arial, Helvetica, sans-serif;
         font-weight: 100;
         font-style: normal;
+        padding: 16px;
+        max-height: 100%;
         overflow: hidden;
       }
 
@@ -54,6 +68,43 @@
       .remove-button:hover {
         background: rgba(0, 0, 0, 0.05);
       }
+      
+      #selectedTextContainer {
+        width: 100%;
+        box-sizing: border-box;
+        max-height: 120px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding: 8px;
+        margin: 10px 0;
+        background: transparent;
+        border-radius: 14px;
+        scrollbar-color: #bbb transparent;
+        scrollbar-width: thin;
+        font-size: 16px;
+        line-height: 1.15;
+        color: #666;
+        word-break: break-word;
+        overflow-wrap: anywhere;
+        white-space: pre-wrap;
+      }
+
+      #selectedTextContainer::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      #selectedTextContainer::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      #selectedTextContainer::-webkit-scrollbar-thumb {
+        background: #bbb;
+        border-radius: 4px;
+      }
+
+      #selectedTextContainer::-webkit-scrollbar-button {
+        display: none;
+      }
 
       #exclusionList {
         width: 100%;
@@ -93,7 +144,8 @@
     <h2>Word count: <span id="wordCount">0</span></h2>
     <button onclick="updateCount()">Refresh Count</button>
 
-    <h2>Selected text: <span id="selectedText">None</span></h2>
+    <h2>Selected Text</h2>
+    <div id="selectedTextContainer"><span id="selectedText">None</span></div>
     <button onclick="updateSelectedText()">Refresh</button>
     <button onclick="saveExclusion()">Exclude</button>
     <button onclick="clearExclusions()">Clear All</button>
