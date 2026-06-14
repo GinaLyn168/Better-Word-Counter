@@ -16,6 +16,16 @@ function normalizeText(text) {
   return text ? text.replace(/\s+/g, ' ').trim() : '';
 }
 
+function escapeRegex(text) {
+  return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function phraseMatches(outerText, innerText) {
+  const escapedInner = escapeRegex(innerText);
+  const regex = new RegExp('(^|\\s)' + escapedInner + '(?=\\s|$)', 'i');
+  return regex.test(outerText);
+}
+
 function countWords(text) {
   return normalizeText(text).split(/\s+/)
     .filter(word => word.length > 0 && !/^[-–—]+$/.test(word))
@@ -76,11 +86,29 @@ function saveExclusion(text) {
   const docProperties = PropertiesService.getDocumentProperties();
   const exclusions = JSON.parse(docProperties.getProperty('exclusions') || '[]');
   const normalizedText = normalizeText(text);
-  if (normalizedText.length > 0 && !exclusions.includes(normalizedText)) {
-    exclusions.push(normalizedText);
-    docProperties.setProperty('exclusions', JSON.stringify(exclusions));
+  if (normalizedText.length === 0) return exclusions;
+
+  if (exclusions.includes(normalizedText)) {
+    return exclusions;
   }
-  return exclusions;
+
+  // If the new excluded phrase is already contained inside an existing excluded phrase,
+  // it is redundant and should not be added.
+  const alreadyCovered = exclusions.some(existing =>
+    phraseMatches(existing, normalizedText)
+  );
+  if (alreadyCovered) {
+    return exclusions;
+  }
+
+  // If an existing exclusion is fully contained inside the new phrase, remove the smaller one.
+  const filtered = exclusions.filter(existing =>
+    !phraseMatches(normalizedText, existing)
+  );
+
+  filtered.push(normalizedText);
+  docProperties.setProperty('exclusions', JSON.stringify(filtered));
+  return filtered;
 }
 
 // Function made by Ranbir, no use of AI
