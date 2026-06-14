@@ -49,22 +49,22 @@ function getWordCount() {
 function getSelectedText() {
   const selection = DocumentApp.getActiveDocument().getSelection();
   if (!selection) return null;
-  
+
   const elements = selection.getRangeElements();
-  let selectedText = '';
-  
+  const pieces = [];
+
   for (const element of elements) {
     if (element.getElement().editAsText) {
       const text = element.getElement().asText().getText();
       if (element.isPartial()) {
-        selectedText += text.substring(element.getStartOffset(), element.getEndOffsetInclusive() + 1);
+        pieces.push(text.substring(element.getStartOffset(), element.getEndOffsetInclusive() + 1));
       } else {
-        selectedText += text;
+        pieces.push(text);
       }
     }
   }
-  
-  return normalizeText(selectedText);
+
+  return normalizeText(pieces.join(' '));
 }
 
 // This functionw as made by Ranbir, with use of minimal AI to understand how to save the exclusion and syntax
