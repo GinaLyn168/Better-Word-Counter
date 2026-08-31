@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy - Better Word Counter</title>
+  <style>
+    body { font-family: system-ui, -apple-system, sans-serif; line-height: 1.6; max-width: 750px; margin: 40px auto; padding: 0 20px; color: #333; }
+    h1, h2 { color: #111; }
+    code { background: #f4f4f4; padding: 2px 6px; border-radius: 4px; }
+    li { margin-bottom: 12px; }
+    li:last-child { margin-bottom: 0; }
+  </style>
+</head>
+<body>
+  <h1>Privacy Policy for Better Word Counter</h1>
+  <p><strong>Effective Date:</strong> August 31, 2026</p>
+
+  <h2>Overview</h2>
+  <p>Better Word Counter is a Google Docs™ add-on designed to calculate word counts and manage excluded phrases.</p>
+
+  <h2>Data Access and Storage</h2>
+  <ul>
+    <li>The add-on only accesses text in the active document via <code>documents.currentonly</code> to calculate word totals and detect exclusion phrases. This text is processed entirely in memory in your session and is <strong>never transmitted to external servers</strong> or shared with third parties.</li>
+    <li>Saved exclusion phrases are stored exclusively inside the active Google Doc's internal metadata using Google Apps Script's <code>DocumentProperties</code>. We do not maintain any external database.</li>
+    <li>We do not collect names, email addresses, IP addresses, or telemetry data.</li>
+  </ul>
+
+  <h2>Data Retention and Deletion</h2>
+  <p>Because all data resides strictly inside your Google Doc, deleting the exclusion list inside the add-on or deleting the document itself permanently deletes all associated data.</p>
+
+  <h2>Contact</h2>
+  <p>If you have questions about this privacy policy, please open an issue on the project repository or contact the developer via GitHub.</p>
+  
+  <hr>
+  <p><small>Google Docs™ is a trademark of Google LLC.</small></p>
+</body>
+</html>
